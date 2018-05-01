@@ -23,4 +23,14 @@ interface VocabularyInterface
      * @return string
      */
     public function getText($module, $var, $context = 'default'): string;
+  
+  /**
+   * Get all translations for the selected module
+   *
+   * @param        $module
+   * @param string $context
+   *
+   * @return string[]
+   */
+    public function getModuleTexts($module, $context = 'default'): array;
 }

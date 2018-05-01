@@ -23,7 +23,7 @@
     "psr-4": {
       "HalimonAlexander\\Vocabulary\\": "src/",
       "HalimonAlexander\\Vocabulary\\Tests\\": "tests/",
-      "HalimonAlexander\\Vocabulary\\Tests\\Fixtures\\": "tests/fixtures"
+      "HalimonAlexander\\Vocabulary\\Tests\\Fixtures\\": "tests/fixtures/"
     }
   }
 }

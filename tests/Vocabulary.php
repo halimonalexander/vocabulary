@@ -1,10 +1,15 @@
 <?php
 namespace HalimonAlexander\Vocabulary\Tests;
 
-use HalimonAlexander\Sid\Tests\Fixtures\Fr;
-use HalimonAlexander\Sid\Tests\Fixtures\Pl;
+use HalimonAlexander\Vocabulary\Tests\Fixtures\{
+  En,
+  Fr,
+  Ge,
+  Pl
+};
 use HalimonAlexander\Vocabulary\{
     VocabularyFactory,
+    Exceptions\ModuleNotFound,
     Exceptions\TextNotFound,
     Exceptions\UnknownVocabulary
 };
@@ -39,18 +44,39 @@ class Vocabulary extends TestCase
         $this->assertInstanceOf('HalimonAlexander\\Vocabulary\\Vocabulary', $vocabulary);
     }
     
+    public function testAllModule()
+    {
+      $fr = new Fr();
+      $this->assertEquals(
+        [
+          "one" => "un",
+          "two" => "deux",
+          "three" => "trois",
+        ],
+        $fr->getModuleTexts('digits')
+      );
+    }
+    
     public function testNxVocabulary()
     {
-        $factory = new VocabularyFactory("HalimonAlexander\\Sid\\Tests\\Fixtures");
+        $factory = new VocabularyFactory("HalimonAlexander\\Vocabulary\\Tests\\Fixtures");
         $vocabulary = $factory->create("Gb");
     
         $this->expectException('UnknownVocabulary');
     }
     
+    public function testNxModule()
+    {
+      $vocabulary = new Pl();
+      $vocabulary->getText("unknown", "unknown");
+  
+      $this->expectException('ModuleNotFound');
+    }
+    
     public function testNxText()
     {
         $vocabulary = new Pl();
-        $vocabulary->getText("unknown", "unknown");
+        $vocabulary->getText("known", "unknown");
         
         $this->expectException('TextNotFound');
     }

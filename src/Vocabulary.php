@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace HalimonAlexander\Vocabulary;
 
+use HalimonAlexander\Vocabulary\Exceptions\ModuleNotFound;
 use HalimonAlexander\Vocabulary\Exceptions\TextNotFound;
 
 abstract class Vocabulary
@@ -20,9 +21,17 @@ abstract class Vocabulary
      */
     protected $messages = [];
     
-    /** @inheritdoc */
+    function __construct()
+    {
+      $this->messages = array_merge($this->messages, parent::$messages);
+    }
+  
+  /** @inheritdoc */
     final public function getText($module, $var, $context = 'default')
     {
+        if (!isset($this->messages[$module]))
+            throw new ModuleNotFound("Unable to load module {$module}");
+          
         if (isset($this->messages[$module][$context][$var]))
             return $this->messages[$module][$context][$var];
         
@@ -34,5 +43,19 @@ abstract class Vocabulary
         
         else
             throw new TextNotFound("Unable to translate {$module}::{$var}");
+    }
+  
+    final public function getModuleTexts($module, $context = 'default'): array
+    {
+        if (!isset($this->messages[ $module ]))
+            throw new ModuleNotFound("Unable to load module {$module}");
+        
+        if (isset($this->messages[ $module ][ $context ]))
+            return $this->messages[ $module ][ $context ];
+        
+        elseif (isset($this->messages[ $module ]['default']))
+            return $this->messages[ $module ]['default'];
+        
+        return $this->messages[ $module ];
     }
 }

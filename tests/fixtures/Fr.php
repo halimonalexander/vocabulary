@@ -1,5 +1,5 @@
 <?php
-namespace HalimonAlexander\Sid\Tests\Fixtures;
+namespace HalimonAlexander\Vocabulary\Tests\Fixtures;
 
 use HalimonAlexander\Vocabulary\Vocabulary;
 
@@ -10,6 +10,6 @@ class Fr extends Vocabulary
             "one" => "un",
             "two" => "deux",
             "three" => "trois",
-        ]
+        ],
     ];
 }
