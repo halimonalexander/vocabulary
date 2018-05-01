@@ -1,4 +1,4 @@
-<?php
+<?
 /*
  * This file is part of Vocabulary.
  *
@@ -11,28 +11,43 @@ declare(strict_types=1);
 
 namespace HalimonAlexander\Vocabulary;
 
-use HalimonAlexander\Vocabulary\Exceptions\TextNotFound;
+use HalimonAlexander\Vocabulary\Exception\InvalidArgumentException;
+use HalimonAlexander\Vocabulary\Exception\InvalidSourceType;
 
-abstract class Vocabulary
+/**
+ * Class Vocabulary
+ */
+class Vocabulary
 {
-    /**
-     * @var array Array with translations. Must be used in childs.
-     */
-    protected $messages = [];
-    
-    /** @inheritdoc */
-    final public function getText($module, $var, $context = 'default')
-    {
-        if (isset($this->messages[$module][$context][$var]))
-            return $this->messages[$module][$context][$var];
-        
-        elseif (isset($this->messages[$module]['default'][$var]))
-            return $this->messages[$module]['default'][$var];
-        
-        elseif (isset($this->messages[$module][$var]))
-            return $this->messages[$module][$var];
-        
-        else
-            throw new TextNotFound("Unable to translate {$module}::{$var}");
+  /**
+   * @var Bag
+   */
+  public $bag;
+
+  /**
+   * Get the translation of the phrase.
+   *
+   * @param string $sid Variable to translate.
+   * @param string $domain Domain filter to search in.
+   * @param string $context Context of the translation, if there are several of them.
+   * @return string
+   */
+  function getText($sid, $domain = '', $context = 'default')
+  {
+    try {
+      $text = $this->bag->get($domain, $sid, $context);
+    }catch(InvalidArgumentException $e){
+      $text = ucfirst(strtolower($sid));
     }
+
+    return $text;
+  }
+
+  /**
+   *
+   */
+  function load(string $source, string $sourceType)
+  {
+    $this->bag = (new Source())->check($sourceType)->load($source);
+  }
 }
