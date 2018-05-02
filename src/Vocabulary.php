@@ -21,12 +21,12 @@ abstract class Vocabulary
      */
     protected $messages = [];
     
-    function __construct()
+    public function __construct()
     {
       $this->messages = array_merge($this->messages, parent::$messages);
     }
-  
-  /** @inheritdoc */
+
+    /** @inheritdoc */
     final public function getText($module, $var, $context = 'default')
     {
         if (!isset($this->messages[$module]))
@@ -47,15 +47,25 @@ abstract class Vocabulary
   
     final public function getModuleTexts($module, $context = 'default'): array
     {
-        if (!isset($this->messages[ $module ]))
+        $messages = $this->getMessages();
+        
+        if (!isset($messages[ $module ]))
             throw new ModuleNotFound("Unable to load module {$module}");
         
-        if (isset($this->messages[ $module ][ $context ]))
-            return $this->messages[ $module ][ $context ];
+        if (isset($messages[ $module ][ $context ]))
+            return $messages[ $module ][ $context ];
         
-        elseif (isset($this->messages[ $module ]['default']))
-            return $this->messages[ $module ]['default'];
+        elseif (isset($messages[ $module ]['default']))
+            return $messages[ $module ]['default'];
         
-        return $this->messages[ $module ];
+        return $messages[ $module ];
+    }
+
+    protected function getMessages(): array
+    {
+        if ($this instanceof Vocabulary)
+            return $this->messages;
+          
+        return array_merge(parent::getMessages(), $this->messages);
     }
 }
