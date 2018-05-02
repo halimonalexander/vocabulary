@@ -21,11 +21,6 @@ abstract class Vocabulary
      */
     protected $messages = [];
     
-    public function __construct()
-    {
-      $this->messages = array_merge($this->messages, parent::$messages);
-    }
-
     /** @inheritdoc */
     final public function getText($module, $var, $context = 'default')
     {

@@ -22,7 +22,7 @@ class VocabularyFactory
         $this->baseNamespace = $baseNamespace;
     }
     
-    public function create(string $vocabulary): VocabularyInterface
+    public function create(string $vocabulary): Vocabulary
     {
         $classname = $this->baseNamespace . $vocabulary;
         
