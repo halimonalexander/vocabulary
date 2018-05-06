@@ -42,25 +42,15 @@ abstract class Vocabulary
   
     final public function getModuleTexts($module, $context = 'default'): array
     {
-        $messages = $this->getMessages();
-        
-        if (!isset($messages[ $module ]))
+        if (!isset($this->messages[ $module ]))
             throw new ModuleNotFound("Unable to load module {$module}");
         
-        if (isset($messages[ $module ][ $context ]))
-            return $messages[ $module ][ $context ];
+        if (isset($this->messages[ $module ][ $context ]))
+            return $this->messages[ $module ][ $context ];
         
-        elseif (isset($messages[ $module ]['default']))
-            return $messages[ $module ]['default'];
+        elseif (isset($this->messages[ $module ]['default']))
+            return $this->messages[ $module ]['default'];
         
-        return $messages[ $module ];
-    }
-
-    protected function getMessages(): array
-    {
-        if ($this instanceof Vocabulary)
-            return $this->messages;
-          
-        return array_merge(parent::getMessages(), $this->messages);
+        return $this->messages[ $module ];
     }
 }
