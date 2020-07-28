@@ -22,7 +22,7 @@ interface VocabularyInterface
      * 
      * @return string
      */
-    public function getText($module, $var, $context = 'default'): string;
+    public function getText(string $module, string $var, string $context = 'default'): string;
   
   /**
    * Get all translations for the selected module
@@ -32,5 +32,5 @@ interface VocabularyInterface
    *
    * @return string[]
    */
-    public function getModuleTexts($module, $context = 'default'): array;
+    public function getModuleTexts(string $module, string $context = 'default'): array;
 }
