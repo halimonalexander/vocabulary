@@ -9,7 +9,7 @@
  */
 declare(strict_types=1);
 
-namespace HalimonAlexander\Vocabulary;
+namespace HalimonAlexander\Vocabulary\Interfaces;
 
 interface VocabularyInterface
 {

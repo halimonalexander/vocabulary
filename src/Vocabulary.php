@@ -13,44 +13,54 @@ namespace HalimonAlexander\Vocabulary;
 
 use HalimonAlexander\Vocabulary\Exceptions\ModuleNotFound;
 use HalimonAlexander\Vocabulary\Exceptions\TextNotFound;
+use HalimonAlexander\Vocabulary\Interfaces\VocabularyInterface;
 
-abstract class Vocabulary
+abstract class Vocabulary implements VocabularyInterface
 {
     /**
      * @var array Array with translations. Must be used in childs.
      */
     protected $messages = [];
     
-    /** @inheritdoc */
-    final public function getText($module, $var, $context = 'default')
+    /**
+     * @inheritdoc
+     * @throws ModuleNotFound
+     * @throws TextNotFound
+     */
+    final public function getText(string $module, string $var, string $context = 'default'): string
     {
-        if (!isset($this->messages[$module]))
-            throw new ModuleNotFound("Unable to load module {$module}");
+        $texts = $this->getModuleTexts($module, $context);
           
-        if (isset($this->messages[$module][$context][$var]))
-            return $this->messages[$module][$context][$var];
+        if (array_key_exists($var, $texts)) {
+            return $texts[$var];
+        }
         
-        elseif (isset($this->messages[$module]['default'][$var]))
-            return $this->messages[$module]['default'][$var];
-        
-        elseif (isset($this->messages[$module][$var]))
-            return $this->messages[$module][$var];
-        
-        else
-            throw new TextNotFound("Unable to translate {$module}::{$var}");
+        throw new TextNotFound("Unable to translate {$module}::{$var}");
     }
-  
-    final public function getModuleTexts($module, $context = 'default'): array
+    
+    /**
+     * @inheritdoc
+     * @throws ModuleNotFound
+     */
+    final public function getModuleTexts(string $module, string $context = 'default'): array
     {
-        if (!isset($this->messages[ $module ]))
-            throw new ModuleNotFound("Unable to load module {$module}");
-        
-        if (isset($this->messages[ $module ][ $context ]))
-            return $this->messages[ $module ][ $context ];
-        
-        elseif (isset($this->messages[ $module ]['default']))
-            return $this->messages[ $module ]['default'];
-        
-        return $this->messages[ $module ];
+        $this->checkModuleExistence($module);
+    
+        if (array_key_exists($context, $this->messages[$module])) {
+            return $this->messages[$module][$context];
+        }
+    
+        if (array_key_exists('default', $this->messages[$module])) {
+            return $this->messages[$module]['default'];
+        }
+    
+        return $this->messages[$module];
+    }
+    
+    private function checkModuleExistence(string $module): void
+    {
+        if (!array_key_exists($module, $this->messages)) {
+            throw new ModuleNotFound("Unable to load module `{$module}`");
+        }
     }
 }
